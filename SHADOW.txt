@@ -1,0 +1,29 @@
+shadow prebuilt repo: libion (target)
+  upstream: system/memory/libion
+  api-level: 34 payload (branch 34-20261024)
+  blobs: org.blisslabs.ag.libion.apex + org.blisslabs.ag.libion.dev.apex @ 14000001
+    (pkgver 14.0.0_r67-1; extracted; blobs deleted, not tracked)
+  recipe: apex/libion @ 8ca08c79e7cc30a3df185cd1e04ca566ebece780 (main, local,
+    NOT pushed - runner down); built with local makeapex in ag-build
+    (API=34 LEVEL=v3 makeapex -f -C -m, user builder, 2026-10-24)
+  source pin: AOSP tag android-14.0.0_r67 = d58c90fa (EXACT los-21 match; los-21
+    checkout is the pristine tag - zero divergence, no LOS-only modules; the
+    standalone libion repo android14-release branch is identical to the tag)
+  layout: flattened root (payload contents at repo root)
+  modules: libion (cc_prebuilt_library, unified shared lib/libion.so + static
+    lib/libion.a)
+  notes: source also defines iontest (cc_binary) and ion-unit-tests (cc_test,
+    tests/ subdir) - tests dropped. Mirrors source vendor_available,
+    product_available, recovery_available, vndk{enabled,support_system_process},
+    apex_available platform+media.swcodec, min_sdk_version 29; host_supported
+    removed (source is target-only). export_include_dirs include+kernel-headers
+    (ion/ion.h + uapi linux/ion*.h) - gen_extractive_bp only discovered include/,
+    kernel-headers export hand-added. Payload built with bp2ninja/NDK r30:
+    DT_NEEDED libc++_shared.so (provided by com.android.runtime on device)
+    instead of in-Soong libc++.so - same class as prior NDK-built shadows.
+    Coexistence: prebuilts/vndk/v34*/Android.bp keeps vndk_prebuilt_shared
+    "libion" (same class as the onboarded libpng shadow vs its v34 snapshot
+    module). Dummies and linker.config.json filtered. dev payload also carries
+    lib/libion.a so the unified cc_prebuilt_library serves static consumers
+    (mirrors source cc_library static variant).
+  date: 2026-10-24
